@@ -96,7 +96,22 @@ class userController extends Controller
      */
     public function destroy($id)
     {
-        
+        $email = $request->data_token->email;
+        $user = User::where('email', $email)->first();
+        if(isset($user)){
+
+            if($request->password == decrypt($user->password)){
+                $user->delete();
+                return response()->json(["message" => "Usuario boorado"]);
+
+            }else{
+                return response()->json(["Error" => "No tienes permisos para borrar el usuario"]);
+            }
+
+        }else{
+            return response()->json(["Error" => "No tienes permisos para borrar el usuario"]);
+        }
+
     }
 
     public function login(Request $request){
@@ -105,7 +120,7 @@ class userController extends Controller
         $user = User::where($data_token)->first();  
        
         if ($user!=null) {       
-            if($request->password == $user->password)
+            if($request->password == decrypt($user->password))
             {       
                 $token = new Token($data_token);
                 $tokenEncoded = $token->encode();
