@@ -96,7 +96,7 @@ class userController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
     }
 
     public function login(Request $request){

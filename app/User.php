@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class User extends Model
 {
@@ -15,7 +16,7 @@ class User extends Model
     {
         $user = new User;
         $user->name = $request->name;
-        $user->password = $request->password;
+        $user->password = password_hash($request->password, PASSWORD_DEFAULT);
         $user->email = $request->email;
         $user->save();
     }
