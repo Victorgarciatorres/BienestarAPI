@@ -18,7 +18,7 @@ class application extends Model
         $application->icon = $request->icon;
         $application->save();
     }
-    Public function applicationExists($name){
+    public function applicationExists($name){
         $applications = self::where('name',$name)->get();
         
         foreach ($applications as $key => $value) {
@@ -27,5 +27,9 @@ class application extends Model
             }
         }
         return false;
+    }
+    public function getApplications(){
+        $applications = self::all();
+        return $applications;
     }
 }
