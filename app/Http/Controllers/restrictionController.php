@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\restriction;
 use App\Helper\Token;
-use App\application;
-use App\user;
 
 class restrictionController extends Controller
 {
@@ -100,42 +98,45 @@ class restrictionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         $restriction = restriction::where('id',$request->id)->first();
 
-        if (isset($restriction)) {
+         if (isset($restriction)) {
 
-            if(is_null($request->max_time)){
-
+            if (is_null($request->max_time)) {
                 if (is_null($request->start_hour_restriction) || is_null($request->finish_hour_restriction)) {
-                    return response()->json(["Error" => "La restriccion no existe"]);
-
+                        return response()->json(["Error" => "Debes de actualizar un campo de restriction"]);
+                }else{     
+                    $restriction->new_Restriction($request,$user->id,$application->id);
+                    return response()->json(["Success" => "Se ha añadido la restriction"]);
+                    }
                 }else{
-                    $restriction->start_hour_restriction = $request->start_hour_restriction;
-                    $restriction->finish_hour_restriction = $request->finish_hour_restriction;
-                    $restriction->update();
-                   return response()->json(["Success" => "Se ha modificado la restriccion."]);
-                } 
+                    $restriction->new_Restriction($request,$user->id,$application->id);
+                    return response()->json(["Success" => "Se ha añadido la restriction"]);
+                }
             }else{
-                $restriction->max_time = $request->max_time;
-                $restriction->update();
-                return response()->json(["Success" => "Se ha modificado la restriccion."]);
+                return response()->json(["Error" => "El usuario no existe"]);
             }
+        
+            $restriction->max_time = $request->max_time;
+            $restriction->start_hour_restriction = $request->start_hour_restriction;
+            $restriction->finish_hour_restriction = $request->finish_hour_restriction;
+            $restriction->update();
+        
             return response()->json(["Success" => "Se ha modificado la restriccion."]);
-
         }else{
             return response()->json(["Error" => "La restriccion no existe"]);
         } 
-       
     }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy($id)
     {
         $restriction = restriction::where('id',$request->id)->first();
          if (isset($restriction)) {

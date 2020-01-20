@@ -154,8 +154,10 @@ class userController extends Controller
         if (isset($user)) {   
             $newPassword = self::randomPassword();
             self::sendEmail($user->email,$newPassword);
-            
+                
+
                 $user->password = $newPassword;
+
                 $user->update();
             
             return response()->json(["Success" => "Se ha restablecido su contraseña, revise su correo electronico."]);
